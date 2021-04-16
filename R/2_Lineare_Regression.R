@@ -64,6 +64,14 @@ deviance(model_1)
 # "Gender" variable adjustieren?
 
 model_2 <- lm(Height ~ Weight + Gender, data = A)
+
+# An dieser Stelle kam die interessante Frage auf, wie die interne Repräsentation
+# der Daten aussieht, wenn man eine binäre Variable im Datensatz hat.
+# Diese Repräsentation lässt sich tatsächlich sehr einfach aus dem Modell
+# extrahieren! Hier sind 5 Gender="Male" Zeilen, und 5 Gender="Female" Zeilen:
+model.matrix(model_2)[c(1:5, 5000:5005),]
+
+
 summary(model_2)
 
 # Eine lineare funktion mit einem Outcome und zwei abhängigen Variablen
