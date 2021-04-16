@@ -1,0 +1,2 @@
+The dataset used in this lecture is freely available at:
+www.kaggle.com/majidarif17/weight-and-heightcsv/download
