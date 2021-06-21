@@ -13,10 +13,16 @@ read.csv2("dat/heart.csv",sep=",") %>%
   select(-Thal) -> A
 
 library(randomForest)
-rf1 <- randomForest(Herzkrank ~ ., data = A)
+# Um die MeanDecreaseAccuracy ausgegeben zu bekommen, muss man beim fitting
+# des Modells schon importance = TRUE setzen
+rf1 <- randomForest(Herzkrank ~ ., data = A, importance = TRUE)
 rf1
-importance(rf1)
+importance(rf1, type=1)
 varImpPlot(rf1, main = NULL)
 
 
-
+# Setze p (bzw. m, je nach literatur) = 5.
+rf2 <- randomForest(Herzkrank ~ ., data = A, mtry = 5)
+rf2
+importance(rf2)
+varImpPlot(rf2, main = NULL)
