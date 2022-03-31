@@ -1,2 +1,5 @@
-The dataset used in this lecture is freely available at:
+The datasest used in this lecture is freely available from kaggle.com.
+weight-height dataset:
 www.kaggle.com/majidarif17/weight-and-heightcsv/download
+heart-disease dataset:
+www.kaggle.com/ronitf/heart-disease-uci/download
