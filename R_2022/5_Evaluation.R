@@ -1,3 +1,22 @@
+library(evidence)
+data(fev)
+
+fev <- readRDS("dat/fev.RDS")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Aufgabe 1
 library(evidence)
 data(fev)
@@ -24,9 +43,10 @@ library(DescTools)
 library(survival)
 library(tidyverse)
 data(pbc)
-pbc$death <- as.factor(ifelse(pbc$status==2, 1, 0))
-pbc <- pbc %>% mutate(hepato = factor(hepato),
-                      stage = factor(stage)) %>% as.data.frame()
+pbc$death <- factor(pbc$status==2)
+pbc$hepato <-  factor(pbc$hepato)
+pbc$stage <- factor(pbc$stage)
+
 glmpbc1 <- glm(death ~ age + sex, data = pbc, family = binomial(link=logit))
 
 PseudoR2(glmpbc1, which="McFadden")

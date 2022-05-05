@@ -81,3 +81,6 @@ theta.fct <- function(data, index){
 }
 theta_boot <- boot(weightgain, theta.fct, R=200)
 print(theta_boot)
+
+boot.ci(theta_boot)
+summary(lm(weightgain ~ ., data=weightgain))
