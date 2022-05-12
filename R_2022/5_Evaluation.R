@@ -1,22 +1,3 @@
-library(evidence)
-data(fev)
-
-fev <- readRDS("dat/fev.RDS")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Aufgabe 1
 library(evidence)
 data(fev)
