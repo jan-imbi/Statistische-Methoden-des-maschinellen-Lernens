@@ -11,11 +11,19 @@ read.csv2("dat/heart.csv",sep=",") %>%
          Thal         = factor(Thal)) %>%
   dplyr::select(-Thal) -> dat
 
+
 library(randomForest)
 rf1 <- randomForest(Herzkrank ~ ., data = dat)
 rf1
 importance(rf1)
 varImpPlot(rf1, main = NULL)
+
+
 rf2 <- randomForest(Herzkrank ~ ., data = dat, mtry = 5)
 rf2
 importance(rf2)
+varImpPlot(rf2, main = NULL)
+
+
+
+
