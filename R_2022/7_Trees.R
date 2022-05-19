@@ -7,9 +7,11 @@ read.csv2("dat/weight-height.csv", sep =",", dec=".") %>%
     Weight = Weight / 2.2046, # weight is given in pounds
     Height = Height * 2.54 # height is given in inches
   ) -> dat
-tree <- rpart::rpart(Gender~., data=dat, method = "class",
-                     control = rpart.control(minsplit = 100L))
-rpart.plot::prp(tree, type = 5)
+tree <- rpart(Gender~., data=dat, method = "class",
+                     control = rpart.control(minsplit = 100L, cp=0))
+prp(tree, extra=2, type = 2)
+
+
 
 # Aufgabe 2
 pred_vs <- predict(tree, dat)
