@@ -40,14 +40,8 @@ model_best_subset <- glm(Herzkrank ~ Geschlecht + Brustschmerz +
                            Gefaesse,
                          data = dat,
                          family = "binomial")
+summary(model_best_subset)
 
-summary(model_best_subset)
-model_best_subset <- glm(Herzkrank ~ Geschlecht + Brustschmerz + Blutdruck + 
-                           Cholesterin + Herzschlag + Angina + 
-                           Depression1 + Depression2 + Gefaesse,
-                         data = dat,
-                         family = "binomial")
-summary(model_best_subset)
 
 # Aufgabe 2
 
@@ -67,22 +61,6 @@ results_FWS <- stepAIC(
 # view results
 summary(results_FWS)
 
-# define null model 
-model_null <- glm(Herzkrank ~ 1, data = dat, family = "binomial")
-
-# perform forward selection
-results_FWS <- stepAIC(
-  model_null, 
-  direction = "forward",
-  scope = list(lower = ~ 1,
-               upper = Herzkrank ~ Alter + Geschlecht + Brustschmerz + 
-                 Blutdruck + Cholesterin + Blutzucker + EKG + Herzschlag + 
-                 Angina + Depression1 + Depression2 + Gefaesse),
-  trace = FALSE)
-
-# view results
-summary(results_FWS)
-
 
 # define full model
 model_full <- glm(Herzkrank ~ ., data = dat, family = "binomial")
@@ -94,24 +72,8 @@ results_BWS <- stepAIC(model_full, direction = "backward")
 summary(results_BWS)
 
 
-# define full model
-model_full <- glm(Herzkrank ~ ., data = dat, family = "binomial")
-
-# perform backward selection
-results_BWS <- stepAIC(model_full, direction = "backward", trace = FALSE)
-
-# view results
-summary(results_BWS)
-
-
 # perform stepwise selection
-results_both <- stepAIC(model_full, direction = "both")
-
-# view results
-summary(results_both)
-
-# perform stepwise selection
-results_both <- stepAIC(model_full, direction = "both", trace = FALSE)
+results_both <- stepAIC(model_full, direction = "both", trace = TRUE)
 
 # view results
 summary(results_both)
@@ -122,43 +84,6 @@ model_final <- glm(Herzkrank ~ Geschlecht + Brustschmerz +
                      Angina + Depression1 + Depression2 + Gefaesse,
                    data = dat,
                    family = "binomial")
-
-# define 5-fold cross-validation
-ctrl <- caret::trainControl(method = "cv", number = 5,
-                            classProbs = TRUE,
-                            savePredictions = TRUE,
-                            summaryFunction = caret::twoClassSummary)
-
-# 5-fold cross-validation
-set.seed(20042021)
-glm_best <- caret::train(Herzkrank ~ Geschlecht + Brustschmerz + 
-                           Blutdruck + Cholesterin + Herzschlag +
-                           Angina + Depression1 + Depression2 + Gefaesse, 
-                         data = dat,
-                         method = "glm",
-                         trControl = ctrl,
-                         metric = "ROC")
-
-
-roc_best <- pROC::roc(response = glm_best$pred$obs,    # observations
-                      predictor = glm_best$pred$krank, # predictions
-                      print.auc = TRUE,
-                      ci = TRUE,        # compute confidence interval
-                      plot = TRUE,      # create ROC plot
-                      main = "ROC curve of the final logistic regression model")
-
-
-model_final <- glm(Herzkrank ~ Geschlecht + Brustschmerz + 
-                     Blutdruck + Cholesterin + Herzschlag +
-                     Angina + Depression1 + Depression2 + Gefaesse,
-                   data = dat,
-                   family = "binomial")
-
-ctrl <- caret::trainControl(method = "cv",
-                            number = 5,
-                            classProbs = TRUE,
-                            savePredictions = TRUE,
-                            summaryFunction = caret::twoClassSummary)
 
 # 5-fache Kreuzvalidierung des finalen Modells
 set.seed(20042021)
@@ -193,32 +118,6 @@ roc_full <- pROC::roc(response = glm_full$pred$obs,
                       print.auc.adj=c(0,5), # adjust position of AUC
                       print.auc = TRUE,
                       main = "ROC curve of the final(black) and full (green) model")
-
-
-# generate final model including selected variables
-
-glm_full <- caret::train(Herzkrank ~ ., data = dat,
-                         method = "glm",
-                         trControl = ctrl,
-                         metric = "ROC")
-
-roc_best <- pROC::roc(response = glm_best$pred$obs, # pbservations
-                      predictor = glm_best$pred$krank, # predictions
-                      ci = TRUE,        # compute confidence interval
-                      plot = TRUE,      # create ROC plot
-                      print.auc = TRUE,
-                      main = "ROC curve of the final (black) and full (green) model")
-
-roc_full <- pROC::roc(response = glm_full$pred$obs, 
-                      predictor = glm_full$pred$krank, 
-                      ci = TRUE,
-                      plot = TRUE,
-                      add = TRUE,       # add ROC curve to existing plot
-                      col = "darkgreen",
-                      print.auc.adj=c(0,5), # adjust position of AUC
-                      print.auc = TRUE)
-
-
 
 
 
