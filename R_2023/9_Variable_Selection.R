@@ -1,5 +1,6 @@
 library(MASS)
 library(dplyr)
+library(leaps)
 
 # Aufgabe 1
 dat <- read.csv2("dat/heart.csv", sep=",") %>%
@@ -18,15 +19,15 @@ regfit_full <- leaps::regsubsets(Herzkrank ~ .,
                                  nvmax = 16)
 results_bestsub <- summary(regfit_full)
 results_bestsub$outmat
-plot(regfit_full, scale = "adjr")
+plot(regfit_full, scale = "bic")
 plot(regfit_full, scale = "adjr")
 which.max(results_bestsub$adjr2)
-plot(results_bestsub$adjr2,
-     main = "Adjusted R^2 over number of variables",
+plot(results_bestsub$bic,
+     main = "Bayesian information criterion over number of variables",
      xlab = "Number of Variables",
-     ylab = "Adjusted RSq",
+     ylab = "BIC",
      type = "b")
-points(11, results_bestsub$adjr2[11], col="red", cex=2, pch=20)
+points(8, results_bestsub$bic[8], col="red", cex=2, pch=20)
 plot(results_bestsub$adjr2,
      main = "Adjusted R^2 over number of variables",
      xlab = "Number of Variables",
