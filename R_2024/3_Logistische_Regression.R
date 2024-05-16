@@ -1,40 +1,32 @@
-library(dplyr)
-read.csv2("dat/weight-height.csv", sep =",", dec=".") %>%
-  mutate(
-    Weight = Weight / 2.2046, # weight is given in pounds
-    Height = Height * 2.54 # height is given in inches
-  ) -> A
+github.com/jan-imbi/statistische-methoden-des-maschinellen-lernens
+library(readr)
+A <- read_csv("dat/weight-height.csv")
+A$Weight <- A$Weight / 2.2046
+A$Height <- A$Height * 2.54
+A$Gender <- factor(A$Gender)
 
-A$Gender <- as.factor(A$Gender)
 ?glm
 
-
-log_modl <- glm(Gender ~ Height, family = binomial(), data = A)
-summary(log_modl)
+fit <- glm(Gender ~ Height, data = A,  family = binomial())
 
 ?predict
 
-predict(log_modl)
-predict(log_modl, type = "response")
+predict(fit)
 
 inv_log <- function(eta) 1/(1+exp(-eta))
-inv_log(predict(log_modl))
+inv_log(predict(fit))
 
+predict(fit, type="response")
+
+
+ifelse(predict(fit, type="response") > 0.5, "Male", "Female")
 A$Gender
 
-table(A$Gender, ifelse(predict(log_modl, type = "response")  > 0.5, "Male", "Female")) 
-
-log_modl2 <- glm(Gender ~ Height + Weight , family = binomial(), data = A)
-summary(log_modl2)
+table(ifelse(predict(fit, type="response") > 0.5, "Male", "Female"), A$Gender, deparse.level = 2)
 
 
-table(A$Gender,
-  ifelse(predict(log_modl2, type = "response") > 0.5, "Male", "Female"),
-  deparse.level = 2)
+fit2 <- glm(Gender ~ Height + Weight, data = A,  family = binomial())
+fit2
+table(ifelse(predict(fit2, type="response") > 0.5, "Male", "Female"), A$Gender, deparse.level = 2)
 
-table(A$Gender, ifelse(predict(log_modl, type = "response")  > 0.5, "Male", "Female")) 
-      
-summary(log_modl)
-summary(log_modl2)
-
-
+anova(fit, fit2, test = "Chisq")
