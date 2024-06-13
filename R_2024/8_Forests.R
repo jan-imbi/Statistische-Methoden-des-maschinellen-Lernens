@@ -1,46 +1,28 @@
 library(dplyr)
 
 A <- read.csv2("dat/heart.csv",sep=",") 
-
-
-
-read.csv2("dat/heart.csv",sep=",") %>%
-  mutate(Herzkrank    = factor(ifelse(Herzkrank == 0, "gesund", "krank")),
-         Geschlecht   = factor(ifelse(Geschlecht == 0, "female", "male")),
-         Brustschmerz = factor(Brustschmerz),
-         Blutzucker   = factor(ifelse(Blutzucker == 1, "erhoeht", "normal")),
-         EKG          = factor(EKG),
-         Angina       = factor(ifelse(Angina == 1, "ja", "nein")),
-         Depression1  = as.numeric(Depression1),
-         Depression2  = factor(Depression2),
-         Thal         = factor(Thal)) %>%
-  dplyr::select(-Thal) -> dat
-
-
-
-
-
-
-
-
-
-
-
+A$Geschlecht <- factor(A$Geschlecht)
+A$Brustschmerz  <- factor(A$Brustschmerz)
+A$Blutzucker   <- factor(A$Blutzucker)
+A$EKG   <- factor(A$EKG)
+A$Angina   <- factor(A$Angina)
+A$Gefaesse   <- factor(A$Gefaesse)
+A$Herzkrank <- factor(A$Herzkrank)
 
 
 
 library(randomForest)
-rf1 <- randomForest(Herzkrank ~ ., data = dat)
-rf1
-importance(rf1)
-varImpPlot(rf1, main = NULL)
 
+set.seed(123)
+modl1 <- randomForest(Herzkrank ~ .,  data = A)
+varImpPlot(modl1)
 
-rf2 <- randomForest(Herzkrank ~ ., data = dat, mtry = 5)
-rf2
-importance(rf2)
-varImpPlot(rf2, main = NULL)
+set.seed(123)
+modl2 <- randomForest(Herzkrank ~ .,  data = A, mtry=5, nodesize=6)
+varImpPlot(modl2)
 
-
+set.seed(123)
+modl3 <- randomForest(Herzkrank ~ .,  data = A, nodesize=6)
+varImpPlot(modl3)
 
 
